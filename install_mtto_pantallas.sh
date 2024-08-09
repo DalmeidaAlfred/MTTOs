@@ -59,3 +59,4 @@ done
 echo Cambiando cron de sitio
 sed -i "s/set_community/$COMUNIDAD/g" "/home/pi/PIMCO/cron_pimco"
 echo AlfredSmart | sudo -S mv /home/pi/PIMCO/cron_pimco /etc/cron.d/cron_pimco
+
