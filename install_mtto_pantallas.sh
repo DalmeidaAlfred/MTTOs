@@ -59,7 +59,7 @@ done
 echo Cambiando cron de sitio
 COMUNIDAD=$(echo "$COMUNIDAD" | sed "s/ /+/g")
 sed -i "s/set_community/$COMUNIDAD/g" "/home/pi/PIMCO/cron_pimco"
-echo AlfredSmart | sudo -S mv /home/pi/PIMCO/cron_pimco /etc/cron.d/cron_pimco
+echo AlfredSmart | sudo -S mv -f /home/pi/PIMCO/cron_pimco /etc/cron.d/cron_pimco
 
 echo Bashing every script
 
