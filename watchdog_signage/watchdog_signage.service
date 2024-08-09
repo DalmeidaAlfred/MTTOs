@@ -1,0 +1,16 @@
+[Unit]
+Description=Watchdog for the signage services
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /home/pi/MTTO/Start_watchdog_signage.sh
+ExecStop=/bin/bash /home/pi/MTTO/Stop_watchdog_signage.sh
+Restart=always
+RestartSec=5
+TimeoutSec=60
+RuntimeMaxSec=infinity
+PIDFile=/tmp/watchdog_signage.pid
+
+[Install]
+WantedBy=multi-user.target

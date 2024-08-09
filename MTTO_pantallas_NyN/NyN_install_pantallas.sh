@@ -59,7 +59,7 @@ done
 echo Cambiando cron de sitio
 COMUNIDAD=$(echo "$COMUNIDAD" | sed "s/ /+/g")
 sed -i "s/set_community/$COMUNIDAD/g" "/home/pi/MTTO/NyN_cron"
-echo AlfredSmart | sudo -S mv -f /home/pi/MTTO/NyN_cron /etc/cron.d/NyN_cron
+mv -f /home/pi/MTTO/NyN_cron /etc/cron.d/NyN_cron
 
 echo Bashing every script
 
