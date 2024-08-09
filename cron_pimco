@@ -1,5 +1,5 @@
                                                           
-0 0 0/6 1/1 * ? * root /bin/bash /home/pi/PIMCO/PIMCO_mtto_pantallas.sh 
+0 0 0/6 1/1 * ? * root /bin/bash /home/pi/PIMCO/PIMCO_mtto_pantallas.sh
 0 0 0/6 1/1 * ? * root /bin/bash /home/pi/PIMCO/PIMCO_mtto_pantallas_TV.sh 
 0 0 0/6 1/1 * ? * root /bin/bash /home/pi/PIMCO/PIMCO_mtto_pantallas_HDMI.sh 
 
