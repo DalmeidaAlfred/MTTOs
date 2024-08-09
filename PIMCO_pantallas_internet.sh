@@ -1,6 +1,7 @@
 #!/bin/bash
 
 comunidad="set_community"
+comunidad=$(echo "$comunidad" | sed "s/ /+/g")
 
 # Function to check internet connection
 check_internet(){
