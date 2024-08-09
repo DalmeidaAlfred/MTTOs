@@ -18,15 +18,17 @@ while true; do
         kill -9 $KILLPID;
     done
 
-        sleep 15
+    sleep 15
 
-        echo "$(date): TV restart detected, starting signage." >> "$LOG_FILE"
-        echo "Turn On signage"
+    echo "$(date): TV restart detected, starting signage." >> "$LOG_FILE"
+    echo "Turn On signage"
 
-        # Start the signage application
-        /home/pi/Downloads/optisigns-5.6.32-arm64.AppImage &
-        echo "$(date): Signage process started." >> "$LOG_FILE"
+    # Start the signage application
+    /home/pi/Downloads/optisigns-5.6.32-arm64.AppImage &
+    echo "$(date): Signage process started." >> "$LOG_FILE"
     fi
+
+    echo "$(date): Nothing detected." >> "$LOG_FILE"
 
     # Update LAST_TV_STATUS for the next loop iteration
     LAST_TV_STATUS="$CURRENT_TV_STATUS"
