@@ -19,7 +19,7 @@ dwnld_links=(
 )
 
 for dwnld_links in "${dwnld_links[@]}"; do
-    wget -q -T 10 "$dwnld_links" -O /home/pi/PIMCO
+    wget -q -T 10 "$dwnld_links" -P /home/pi/PIMCO
 done
 
 # Check if cec-utils is installed
