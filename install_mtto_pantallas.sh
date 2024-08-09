@@ -10,10 +10,10 @@ fi
 
 #Obtain all the files necesary
 dwnld_links=(
-    "https://drive.google.com/uc?export=download&id=1BpWctn7pjbckRdtooBZEQcj3PDWTplf_"
-    "https://drive.google.com/uc?export=download&id=1IyhuLK0AGEZfBcfkSlx3lSk1nqDK1wXe"
-    "https://drive.google.com/uc?export=download&id=148u0663RGIPjg-o8_V5Qdmq3evHNOKsz"
-    "https://drive.google.com/uc?export=download&id=17VFNBULtMb5B_c2s_oMkc0j7_Vh8bVv7"
+    "https://raw.githubusercontent.com/DalmeidaAlfred/mtto_pantallas_nyn/main/PIMCO_pantallas_TV.sh"
+    "https://raw.githubusercontent.com/DalmeidaAlfred/mtto_pantallas_nyn/main/PIMCO_pantallas_hdmi.sh"
+    "https://raw.githubusercontent.com/DalmeidaAlfred/mtto_pantallas_nyn/main/PIMCO_pantallas_internet.sh"
+    "https://raw.githubusercontent.com/DalmeidaAlfred/mtto_pantallas_nyn/main/PIMCO_pantallas_TV.sh"
 )
 
 for dwnld_links in "${dwnld_links[@]}"; do
