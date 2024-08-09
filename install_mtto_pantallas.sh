@@ -64,5 +64,7 @@ echo AlfredSmart | sudo -S mv /home/pi/PIMCO/cron_pimco /etc/cron.d/cron_pimco
 echo Bashing every script
 
 bash /home/pi/PIMCO/PIMCO_pantallas_TV.sh;
+sleep 10
 bash /home/pi/PIMCO/PIMCO_pantallas_internet.sh;
+sleep 10
 bash /home/pi/PIMCO/PIMCO_pantallas_hdmi.sh;
