@@ -1,6 +1,8 @@
 COMUNIDAD=$1
 COMUNIDAD=$(echo "$comunidad" | sed "s/ /+/g")
 
+echo Comunidad: $COMUNIDAD
+
 # Check if main directory is created
 if [ ! -d "/home/pi/PIMCO" ]
 then
