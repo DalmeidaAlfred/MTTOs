@@ -3,4 +3,4 @@
 0 0 0/6 1/1 * ? * root /bin/bash /home/pi/PIMCO/mtto_pantallas_TV.sh 
 0 0 0/6 1/1 * ? * root /bin/bash /home/pi/PIMCO/mtto_pantallas_HDMI.sh 
 
-@reboot root /bin/bash -c "sleep 1800"; /usr/bin/curl --show-error -k -X GET --header "Content-Type: application/json" --header "Accept: application/json" "https://flows.alfredsmartdata.com/webhook/raspberry-pi-pantallas?building=set_comunity"
+@reboot root /bin/bash -c "sleep 1800"; /usr/bin/curl --show-error -k -X GET --header "Content-Type: application/json" --header "Accept: application/json" "https://flows.alfredsmartdata.com/webhook/raspberry-pi-pantallas?building=set_community"
