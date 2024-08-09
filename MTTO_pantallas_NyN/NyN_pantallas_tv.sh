@@ -38,4 +38,4 @@ send_http_post() {
 
 # Main logic
 echo 'scan' | cec-client -s -d 1
-send_http_post 
+send_http_post  
