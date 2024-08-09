@@ -60,4 +60,4 @@ done
 # Apply community to curl of restart of internet
 echo Cambiando cron de sitio
 sed "s/set_community/$COMUNIDAD" "/home/pi/PIMCO/cron_pimco"
-echo AlfredSmart | sudo -S mv /home/pi/PIMCO/cron_pimco /etc/cron.d/cron_pimco
+echo AlfredSmart | sudo -S mv /home/pi/PIMCO/cron_pimco /etc/cron.d/cron_pimco 
