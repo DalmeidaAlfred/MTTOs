@@ -13,9 +13,19 @@ while true; do
     elif [[ "$LAST_TV_STATUS" == "power status: standby" || "$LAST_TV_STATUS" == "power status: transitioning from standby to on" ]] && [[ "$CURRENT_TV_STATUS" == "power status: on" ]]; then
         echo "$(date): TV restart detected, stopping signage." >> "$LOG_FILE"
         echo "Turn off signage"
+        # Kill the existing signage process
+    for KILLPID in $(ps ax | grep optisigns | awk '{print $1;}'); do
+        kill -9 $KILLPID;
+    done
+
         sleep 15
+
         echo "$(date): TV restart detected, starting signage." >> "$LOG_FILE"
         echo "Turn On signage"
+
+        # Start the signage application
+        /home/pi/Downloads/optisigns-5.6.32-arm64.AppImage &
+        echo "$(date): Signage process started." >> "$LOG_FILE"
     fi
 
     # Update LAST_TV_STATUS for the next loop iteration
