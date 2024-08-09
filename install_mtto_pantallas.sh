@@ -1,3 +1,5 @@
+#!/bin/bash
+
 COMUNIDAD=$1
 COMUNIDAD=$(echo "$comunidad" | sed "s/ /+/g")
 
@@ -11,16 +13,20 @@ echo Creating PIMCO directory
 fi
 
 #Obtain all the files necesary
-dwnld_links=(
+:'dwnld_links=(
     "https://raw.githubusercontent.com/DalmeidaAlfred/mtto_pantallas_nyn/main/PIMCO_pantallas_TV.sh"
     "https://raw.githubusercontent.com/DalmeidaAlfred/mtto_pantallas_nyn/main/PIMCO_pantallas_hdmi.sh"
     "https://raw.githubusercontent.com/DalmeidaAlfred/mtto_pantallas_nyn/main/PIMCO_pantallas_internet.sh"
-    "https://raw.githubusercontent.com/DalmeidaAlfred/mtto_pantallas_nyn/main/PIMCO_pantallas_TV.sh"
 )
+'
+    wget -q -T 10 "https://raw.githubusercontent.com/DalmeidaAlfred/mtto_pantallas_nyn/main/PIMCO_pantallas_TV.sh" -O /home/pi/PIMCO/PIMCO_pantallas_TV.sh;
+    wget -q -T 10 "https://raw.githubusercontent.com/DalmeidaAlfred/mtto_pantallas_nyn/main/PIMCO_pantallas_hdmi.sh" -O /home/pi/PIMCO/PIMCO_pantallas_hdmi.sh;
+    wget -q -T 10 "https://raw.githubusercontent.com/DalmeidaAlfred/mtto_pantallas_nyn/main/PIMCO_pantallas_internet.sh" -O /home/pi/PIMCO/PIMCO_pantallas_internet.sh;
+    wget -q -T 10 "https://raw.githubusercontent.com/DalmeidaAlfred/mtto_pantallas_nyn/main/cron_pimco" -O /home/pi/PIMCO/cron_pimco;
 
-for dwnld_links in "${dwnld_links[@]}"; do
-    wget -q -T 10 "$dwnld_links" -O /home/pi/PIMCO/*.sh
-done
+#for dwnld_link in "${dwnld_links}"; do
+ #   wget -q -T 10 "$dwnld_link" -O /home/pi/PIMCO/*.sh
+#done
 
 # Check if cec-utils is installed
 if ! dpkg -l | grep -qw cec-utils; then
