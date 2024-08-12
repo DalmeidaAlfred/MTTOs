@@ -24,6 +24,7 @@ while true; do
     echo "Turn On signage"
 
     # Start the signage application
+    export DISPLAY=:0
     /home/pi/Downloads/optisigns-5.6.32-arm64.AppImage &
     echo "$(date): Signage process started." >> "$LOG_FILE"
     fi
