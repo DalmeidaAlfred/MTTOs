@@ -26,7 +26,7 @@ wget -q -T 10 "https://raw.githubusercontent.com/DalmeidaAlfred/MTTOs/main/watch
 wget -q -T 10 "https://raw.githubusercontent.com/DalmeidaAlfred/MTTOs/main/watchdog_signage/Stop_watchdog_signage.sh" -O /home/pi/MTTO/Stop_watchdog_signage.sh;
 wget -q -T 10 "https://raw.githubusercontent.com/DalmeidaAlfred/MTTOs/main/watchdog_signage/watchdog_signage.service" -O /home/pi/MTTO/watchdog_signage.service;
 wget -q -T 10 "https://raw.githubusercontent.com/DalmeidaAlfred/MTTOs/main/watchdog_signage/watchdog_signage.sh" -O /home/pi/MTTO/watchdog_signage.sh;
-wget -q -T 10 "https://raw.githubusercontent.com/DalmeidaAlfred/MTTOs/main/watchdog_signage/uninstaller_watchdog_signage.sh" -O /home/pi/MTTO/uninstaller_watchdog_signage.sh;
+wget -q -T 10 "https://raw.githubusercontent.com/DalmeidaAlfred/MTTOs/main/watchdog_signage/uninstaller_watchdog_signage.sh" -O /home/pi/uninstaller_watchdog_signage.sh;
 
 chmod a+x /home/pi/MTTO/Start_watchdog_signage.sh
 chmod a+x /home/pi/MTTO/Stop_watchdog_signage.sh
