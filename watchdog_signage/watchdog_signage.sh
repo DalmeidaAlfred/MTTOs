@@ -18,7 +18,7 @@ while true; do
         kill -9 $KILLPID;
     done
 
-    sleep 15
+    sleep 10
 
     echo "$(date): TV restart detected, starting signage." >> "$LOG_FILE"
     echo "Turn On signage"
