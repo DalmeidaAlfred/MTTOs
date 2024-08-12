@@ -19,7 +19,7 @@ while true; do
         sleep 10
         #Start the signage application
         export DISPLAY=:0
-        nohup /home/pi/Downloads/optisigns-5.6.32-arm64.AppImage &
+        sudo nohup /home/pi/Downloads/optisigns-5.6.32-arm64.AppImage &
         echo "$(date): Signage process started." >> "$LOG_FILE"
     else
         echo "$(date): Current TV status: $CURRENT_TV_STATUS." >> "$LOG_FILE"
