@@ -14,8 +14,10 @@ while true; do
         echo "$(date): TV restart detected, stopping signage." >> "$LOG_FILE"
         echo "Turn off signage"
         # Kill the existing signage process
-    for KILLPID in $(ps ax | grep optisigns | awk '{print $1;}'); do
-        kill -9 $KILLPID;
+        for KILLPID in $(ps ax | grep optisigns | awk '{print $1;}'); do
+            kill -9 $KILLPID;
+    elif then
+    echo "$(date): Current TV status: "$CURRENT_TV_STATUS"." >> "$LOG_FILE"
     done
 
     sleep 10
