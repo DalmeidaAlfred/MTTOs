@@ -28,8 +28,8 @@ wget -q -T 10 "https://raw.githubusercontent.com/DalmeidaAlfred/MTTOs/main/watch
 wget -q -T 10 "https://raw.githubusercontent.com/DalmeidaAlfred/MTTOs/main/watchdog_signage/watchdog_signage.sh" -O /home/pi/MTTO/watchdog_signage.sh;
 
 chmod a+x /home/pi/MTTO/Start_watchdog_signage.sh
-
 chmod a+x /home/pi/MTTO/Stop_watchdog_signage.sh
+chmod a+x /home/pi/MTTO/watchdog_signage.sh
 
 sudo mv -f /home/pi/MTTO/watchdog_signage.service /etc/systemd/system/watchdog_signage.service
 
