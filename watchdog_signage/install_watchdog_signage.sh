@@ -5,7 +5,14 @@ MAIN_DIR="/home/pi/MTTO"
 
 if [ ! -d "$MAIN_DIR" ]; then
     mkdir -p "$MAIN_DIR"
+    echo Creating MTTO directory
 fi
+
+# Define log files and their paths
+LOG_DIR="/home/pi/MTTO/watchdog_service.log"
+
+# Check and create log files if they don't exist
+[ -f "$LOG_DIR" ] || { touch "$LOG_DIR"; echo "Creating $(basename "$LOG_DIR")"; }
 
 # Check if cec-utils is installed
 if ! dpkg -l | grep -qw cec-utils; then
