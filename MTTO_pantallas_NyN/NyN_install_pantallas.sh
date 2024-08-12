@@ -37,7 +37,8 @@ log_files=(
 for log_file in "${log_files[@]}"; do
     if [ ! -f "$log_file" ]; then
         touch "$log_file"
-        echo "Creating $(basename "$log_file")"
+        echo "Creating $(basename "$log_file")" and adding permissions
+        sudo chown pi:pi "$log_file"
     fi
 done
 
