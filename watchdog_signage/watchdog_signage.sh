@@ -10,7 +10,7 @@ while true; do
 
     if [ -z "$CURRENT_TV_STATUS" ]; then
         echo "$(date): Error - Unable to retrieve TV power status." >> "$LOG_FILE"
-    elif [[ "$LAST_TV_STATUS" == "power status: standby" || "$LAST_TV_STATUS" == "power status: transitioning from standby to on" ]] && [[ "$CURRENT_TV_STATUS" == "power status: on" ]]; then
+    elif [[ "$LAST_TV_STATUS" == "power status: standby" || "$LAST_TV_STATUS" == "power status: in transition from standby to on" ]] && [[ "$CURRENT_TV_STATUS" == "power status: on" ]]; then
         echo "$(date): TV restart detected, stopping signage." >> "$LOG_FILE"
         echo "Turn off signage"
         # Kill the existing signage process
