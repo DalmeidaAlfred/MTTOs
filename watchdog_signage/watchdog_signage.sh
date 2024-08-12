@@ -14,7 +14,7 @@ while true; do
         echo "$(date): TV restart detected, stopping signage." >> "$LOG_FILE"
         # Kill the existing signage process
         for KILLPID in $(ps ax | grep optisigns | grep -v grep | awk '{print $1}'); do
-            kill -f -9 $KILLPID
+            kill -9 $KILLPID
         done
         sleep 10
         # Start the signage application
