@@ -34,5 +34,5 @@ while true; do
     # Update LAST_TV_STATUS for the next loop iteration
     LAST_TV_STATUS="$CURRENT_TV_STATUS"
 
-    sleep 30  # Add a small delay to avoid excessive CPU usage
+    sleep 10  # Add a small delay to avoid excessive CPU usage
 done
