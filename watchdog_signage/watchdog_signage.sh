@@ -27,6 +27,7 @@ while true; do
         echo "$(date): Signage process started." >> "$LOG_FILE"
     else
         echo "$(date): Current TV status: $CURRENT_TV_STATUS." >> "$LOG_FILE"
+        echo "$(date): Last TV status: $LAST_TV_STATUS." >> "$LOG_FILE"
     fi
 
     # Update LAST_TV_STATUS for the next loop iteration
