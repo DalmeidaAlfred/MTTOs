@@ -14,24 +14,20 @@ while true; do
         echo "$(date): TV restart detected, stopping signage." >> "$LOG_FILE"
         echo "Turn off signage"
         # Kill the existing signage process
-        for KILLPID in $(ps ax | grep optisigns | awk '{print $1;}'); do
-            kill -9 $KILLPID;
-    elif then
-    echo "$(date): Current TV status: "$CURRENT_TV_STATUS"." >> "$LOG_FILE"
-    done
+        for KILLPID in $(ps ax | grep optisigns | grep -v grep | awk '{print $1}'); do
+            kill $KILLPID
+        done
+        
+        echo "$(date): TV restart detected, starting signage." >> "$LOG_FILE"
+        echo "Turn On signage"
 
-    sleep 10
-
-    echo "$(date): TV restart detected, starting signage." >> "$LOG_FILE"
-    echo "Turn On signage"
-
-    # Start the signage application
-    export DISPLAY=:0
-    /home/pi/Downloads/optisigns-5.6.32-arm64.AppImage &
-    echo "$(date): Signage process started." >> "$LOG_FILE"
+        # Start the signage application
+        export DISPLAY=:0
+        /home/pi/Downloads/optisigns-5.6.32-arm64.AppImage &
+        echo "$(date): Signage process started." >> "$LOG_FILE"
+    else
+        echo "$(date): Current TV status: $CURRENT_TV_STATUS." >> "$LOG_FILE"
     fi
-
-    echo "$(date): Nothing detected." >> "$LOG_FILE"
 
     # Update LAST_TV_STATUS for the next loop iteration
     LAST_TV_STATUS="$CURRENT_TV_STATUS"

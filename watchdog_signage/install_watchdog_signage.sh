@@ -31,7 +31,7 @@ wget -q -T 10 "https://raw.githubusercontent.com/DalmeidaAlfred/MTTOs/main/watch
 chmod a+x /home/pi/MTTO/Start_watchdog_signage.sh
 chmod a+x /home/pi/MTTO/Stop_watchdog_signage.sh
 chmod a+x /home/pi/MTTO/watchdog_signage.sh
-chmod a+x /home/pi/MTTO/uninstaller_watchdog_signage.sh
+chmod a+x /home/pi/uninstaller_watchdog_signage.sh
 
 sudo mv -f /home/pi/MTTO/watchdog_signage.service /etc/systemd/system/watchdog_signage.service
 
