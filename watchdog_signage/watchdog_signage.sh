@@ -17,8 +17,9 @@ while true; do
             kill $KILLPID
         done
         sleep 10
+        $DISPLAY:=0
         #Start the signage application
-        sudo /home/pi/Downloads/optisigns-5.6.32-arm64.AppImage
+        sudo /home/pi/Downloads/optisigns-5.6.32-arm64.AppImage --no-sandbox
         sleep 10
         echo "$(date): Signage process started." >> "$LOG_FILE"
     else
