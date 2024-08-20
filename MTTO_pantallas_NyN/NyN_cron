@@ -1,4 +1,4 @@
 1 */6 * * * root /bin/bash /home/pi/MTTO/NyN_pantallas_tv.sh
 2 */6 * * * root /bin/bash /home/pi/MTTO/NyN_pantallas_hdmi.sh
-3 */6 * * * root /bin/bash /home/pi/MTTO/NyN_pantallas_internet.sh 
+3 */6 * * * root /bin/bash /home/pi/MTTO/NyN_pantallas_internet.sh
 @reboot root /bin/bash -c "sleep 1800"; /usr/bin/curl --show-error -k -X GET --header "Content-Type: application/json" --header "Accept: application/json" "https://flows.alfredsmartdata.com/webhook/raspberry-pi-pantallas?building=set_community"
