@@ -30,9 +30,9 @@ send_http_post() {
          "$WEBHOOK_URL"
 
     if [ $? -eq 0 ]; then
-        echo "$(date): HTTP POST request sent successfully" >> /home/pi/MTTO/hdmi_status_check.log
+        sudo echo "$(date): HTTP POST request sent successfully, status: $status_message" >> /home/pi/MTTO/tv_status_check.log
     else
-        echo "$(date): HTTP POST request failed" >> /home/pi/MTTO/hdmi_status_check.log
+        sudo echo "$(date): HTTP POST request failed, status: $status_message" >> /home/pi/MTTO/tv_status_check.log
     fi
 }
 
