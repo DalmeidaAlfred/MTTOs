@@ -38,7 +38,7 @@ for log_file in "${log_files[@]}"; do
     if [ ! -f "$log_file" ]; then
         touch "$log_file"
         echo "Creating $(basename "$log_file")" and adding permissions
-        chmod +x "$log_file"
+        chmod 777 "$log_file"
     fi
 done
 
@@ -53,7 +53,7 @@ script_files=(
 echo Cambiando permisos scripts
 for script_file in "${script_files[@]}"; do
     sed -i "s/set_community/$COMUNIDAD/g" "$script_file"
-    chmod +x "$script_file"
+    chmod 777 "$script_file"
 done
 
 # Apply community to curl of restart of internet
