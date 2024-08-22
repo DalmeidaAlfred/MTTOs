@@ -2,35 +2,46 @@
 
 case $1 in
   "A")
-    DUMMY="ALFRED_DUMMY131_DUMMY_SWITCH_Switch"
+    DUMMY="DUMMY131"
     ;;
   "B")
-    DUMMY="ALFRED_DUMMY132_DUMMY_SWITCH_Switch"
+    DUMMY="DUMMY132"
     ;;
   "C")
-    DUMMY="ALFRED_DUMMY133_DUMMY_SWITCH_Switch"
+    DUMMY="DUMMY133"
     ;;
   "D")
-    DUMMY="ALFRED_DUMMY134_DUMMY_SWITCH_Switch"
+    DUMMY="DUMMY134"
     ;;
   "E")
-    DUMMY="ALFRED_DUMMY135_DUMMY_SWITCH_Switch"
+    DUMMY="DUMMY135"
     ;;
   "F")
-    DUMMY="ALFRED_DUMMY136_DUMMY_SWITCH_Switch"
+    DUMMY="DUMMY136"
     ;;
   "G")
-    DUMMY="ALFRED_DUMMY137_DUMMY_SWITCH_Switch"
+    DUMMY="DUMMY137"
     ;;
 esac
 
 echo $DUMMY
 # Define the new dummy items to append
-NEW_ITEMS=("or \n  Item $DUMMY received command ON")
+NEW_ITEMS=("or \n  Item ALFRED_$DUMMY_DUMMY_SWITCH_Switch  received command ON")
 echo $NEW_ITEMS
+
 # Insert the new items just before the "then" statement
 if ! grep "ALFRED_DUMMY13" /etc/openhab2/rules/community_Franca.rules
+
 then
 sed -i "s/Item ALFRED_DUMMY127_DUMMY_SWITCH_Switch received command ON/Item ALFRED_DUMMY127_DUMMY_SWITCH_Switch received command ON $NEW_ITEMS/g" /etc/openhab2/rules/community_Franca.rules
+
+echo "
+["$DUMMY"]
+default_name=Escalera "$1"
+default_room=Comunidad
+default_usage=CommunityDoor
+device_type=DUMMY_SWITCH
+" >> /home/openhabian/.alfredassistant/dummies.ini
+
 fi
 cat /etc/openhab2/rules/community_Franca.rules
