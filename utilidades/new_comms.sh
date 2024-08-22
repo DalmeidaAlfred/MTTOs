@@ -36,7 +36,6 @@ then
 sed -i "s/Item ALFRED_DUMMY127_DUMMY_SWITCH_Switch received command ON/Item ALFRED_DUMMY127_DUMMY_SWITCH_Switch received command ON $NEW_ITEMS/g" /etc/openhab2/rules/community_Franca.rules
 
 echo "
-
 ["$DUMMY"]
 default_name=Escalera "$1"
 default_room=Comunidad
