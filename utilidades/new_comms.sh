@@ -29,6 +29,8 @@ echo $DUMMY
 NEW_ITEMS=("or \n  Item $DUMMY received command ON")
 echo $NEW_ITEMS
 # Insert the new items just before the "then" statement
+if ! grep "ALFRED_DUMMY13" /etc/openhab2/rules/community_Franca.rules
+then
 sed -i "s/Item ALFRED_DUMMY127_DUMMY_SWITCH_Switch received command ON/Item ALFRED_DUMMY127_DUMMY_SWITCH_Switch received command ON $NEW_ITEMS/g" /etc/openhab2/rules/community_Franca.rules
-
+fi
 cat /etc/openhab2/rules/community_Franca.rules
