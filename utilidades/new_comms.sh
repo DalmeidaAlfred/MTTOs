@@ -25,7 +25,7 @@ case $1 in
 esac
 
 # Define the file path to your rule
-RULE_FILE="/path/to/your/rule/file.rules"
+RULE_FILE="/etc/openhab2/rules/community_Franca.rules"
 
 # Define the new dummy items to append
 NEW_ITEMS=$(cat <<EOL
@@ -35,4 +35,4 @@ EOL
 )
 
 # Insert the new items just before the "then" statement
-sed -i "/Item ALFRED_DUMMY127_DUMMY_SWITCH_Switch received command ON/a$NEW_ITEMS" "$RULE_FILE"
+sed -i "s/Item ALFRED_DUMMY127_DUMMY_SWITCH_Switch received command ON/$NEW_ITEMS/g" "$RULE_FILE"
