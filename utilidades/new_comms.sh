@@ -26,7 +26,7 @@ esac
 
 echo $DUMMY
 # Define the new dummy items to append
-NEW_ITEMS=("or \n  Item ALFRED_"$DUMMY"_DUMMY_SWITCH_Switch  received command ON")
+NEW_ITEMS="or \n  Item ALFRED_"$DUMMY"_DUMMY_SWITCH_Switch received command ON"
 echo $NEW_ITEMS
 
 # Insert the new items just before the "then" statement
