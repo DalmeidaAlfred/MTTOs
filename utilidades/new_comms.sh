@@ -42,6 +42,7 @@ default_room=Comunidad
 default_usage=CommunityDoor
 device_type=DUMMY_SWITCH
 " >> /home/openhabian/.alfredassistant/dummies.ini
-
-fi
 cat /etc/openhab2/rules/community_Franca.rules
+cat /home/openhabian/.alfredassistant/dummies.ini
+echo DONE
+fi
