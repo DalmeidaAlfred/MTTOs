@@ -2,7 +2,6 @@
 
 COMUNIDAD=$1
 
-
 echo Comunidad: $COMUNIDAD
 
 # Check if main directory is created
