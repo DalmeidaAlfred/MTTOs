@@ -1,0 +1,106 @@
+import org.openhab.core.library.types.QuantityType
+
+var Number lastAutomaticMode = 0 // Global variable to store the last automatic mode
+var boolean automaticAction = false // Flag to track if the action was automatic
+var Number lastActiveMode = 0 // To store last active mode before turning off
+
+rule "Thermostat Control"
+when
+    Item ZW031_MCO_SensorTemperature changed or
+    Item ZW031_MCO_Mode changed or
+    Item ZW031_MCO_SetpointCooling changed or
+    Item ZW031_MCO_SetpointHeating changed
+then
+    // Fetch current states
+    val currentTemperature = if (ZW031_MCO_SensorTemperature.state instanceof QuantityType) {
+        (ZW031_MCO_SensorTemperature.state as QuantityType<Number>).toBigDecimal
+    } else {
+        (ZW031_MCO_SensorTemperature.state as Number).floatValue
+    }
+
+    val currentMode = ZW031_MCO_Mode.state as Number
+
+    val setpointCooling = if (ZW031_MCO_SetpointCooling.state instanceof QuantityType) {
+        (ZW031_MCO_SetpointCooling.state as QuantityType<Number>).toBigDecimal
+    } else {
+        (ZW031_MCO_SetpointCooling.state as Number).floatValue
+    }
+
+    val setpointHeating = if (ZW031_MCO_SetpointHeating.state instanceof QuantityType) {
+        (ZW031_MCO_SetpointHeating.state as QuantityType<Number>).toBigDecimal
+    } else {
+        (ZW031_MCO_SetpointHeating.state as Number).floatValue
+    }
+
+    // Define threshold to avoid constant switching (hysteresis)
+    val threshold = 0.5 // Adjust as needed
+
+    logInfo("thermostat", "Last automatic mode : " + lastAutomaticMode)
+    logInfo("thermostat", "Last active mode : " + lastActiveMode)
+    logInfo("thermostat", "Current mode : " + currentMode)
+    // Track automatic action
+    automaticAction = (lastAutomaticMode == currentMode)
+
+    logInfo("thermostat", "Is automatic action ? : " + automaticAction)
+
+
+    // If mode is manually turned off (0)
+    if (currentMode == 0 && !automaticAction) {
+        logInfo("thermostat", "Mode manually set to 0 (Off). Automatic control suspended.")
+        lastActiveMode = currentMode
+        return
+    }
+
+    // Resume automatic control after manual interaction
+    else if (lastAutomaticMode == 0 && (currentMode == 1 || currentMode == 2)) {
+        logInfo("thermostat", "Mode manually set to " + currentMode + ". Resuming automatic control.")
+        lastActiveMode = currentMode
+        automaticAction = true
+        lastAutomaticMode = currentMode
+    }
+
+    else if (lastAutomaticMode == 1 && currentMode == 2) {
+    logInfo("thermostat", "Mode changed from heating to cooling. Resuming automatic cooling control.")
+    lastActiveMode = 2
+    automaticAction = true
+    lastAutomaticMode = currentMode
+}
+
+if (lastAutomaticMode == 2 && currentMode == 1) {
+    logInfo("thermostat", "Mode changed from cooling to heating. Resuming automatic heating control.")
+    lastActiveMode = 1
+    automaticAction = true
+    lastAutomaticMode = currentMode
+}
+
+    if (automaticAction) {
+        switch(currentMode) {
+            case 0: // Mode is off, check whether to turn back on heating or cooling
+                if (lastActiveMode == 1 && currentTemperature <= setpointHeating - threshold) {
+                    logInfo("thermostat", "Temperature below heating setpoint, turning heat back on.")
+                    ZW031_MCO_Mode.sendCommand(1) // Turn heating mode back on
+                    lastAutomaticMode = 1
+                } else if (lastActiveMode == 2 && currentTemperature >= setpointCooling + threshold) {
+                    logInfo("thermostat", "Temperature above cooling setpoint, turning cooling back on.")
+                    ZW031_MCO_Mode.sendCommand(2) // Turn cooling mode back on
+                    lastAutomaticMode = 2
+                }
+            case 1: // Heating mode
+                if (currentTemperature > setpointHeating + threshold) {
+                    logInfo("thermostat", "Temperature above heating setpoint, turning off machine.")
+                    lastActiveMode = 1 // Store that we were in heating mode
+                    ZW031_MCO_Mode.sendCommand(0) // Turn off machine (set mode to Off)
+                    lastAutomaticMode = 0
+                    
+                }
+            case 2: // Cooling mode
+                if (currentTemperature < setpointCooling - threshold) {
+                    logInfo("thermostat", "Temperature below cooling setpoint, turning off machine.")
+                    lastActiveMode = 2 // Store that we were in cooling mode
+                    ZW031_MCO_Mode.sendCommand(0) // Turn off machine (set mode to Off)
+                    lastAutomaticMode = 0
+                }
+                
+        }
+    }
+end
