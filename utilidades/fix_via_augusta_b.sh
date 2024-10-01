@@ -51,7 +51,7 @@ end
 
 rule "Open Terraza door"
 when
-  Item ALFRED_DUMMYComm201_DUMMY_SWITCH_Switch received command ON
+  Item ALFRED_DUMMYComm202_DUMMY_SWITCH_Switch received command ON
 then
   val USER="0000000081b7f468"
   val PASSWORD="C2tVM4khusCvLSBbSK1Cg4eMUhIo1z"
