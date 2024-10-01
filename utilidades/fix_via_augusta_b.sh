@@ -61,4 +61,4 @@ end
 EOL
 
 echo "Replacement completed. Original files backed up as ${RULES_FILE}.bak and ${DUMMIES_FILE}.bak"
-sudo systemctl restart alfred-assistant
+sudo systemctl restart alfred-assistant 
