@@ -32,7 +32,7 @@ EOL
 cat <<EOL > "$RULES_FILE"
 rule "Open community door"
 when
-  Item ALFRED_DUMMY102_DUMMY_LOCK_DoorLock received command ON
+  Item ALFRED_DUMMYComm102_DUMMY_SWITCH_Switch received command ON
 then
   val USER="admin"
   val PASSWORD="AlfredSmart"
@@ -41,7 +41,7 @@ then
 end
 rule "Open Pool B door"
 when
-  Item ALFRED_DUMMY201_DUMMY_LOCK_DoorLock received command ON
+  Item ALFRED_DUMMYComm201_DUMMY_SWITCH_Switch received command ON
 then
   val USER="0000000081b7f468"
   val PASSWORD="C2tVM4khusCvLSBbSK1Cg4eMUhIo1z"
@@ -51,7 +51,7 @@ end
 
 rule "Open Terraza door"
 when
-  Item ALFRED_DUMMY202_DUMMY_LOCK_DoorLock received command ON
+  Item ALFRED_DUMMYComm201_DUMMY_SWITCH_Switch received command ON
 then
   val USER="0000000081b7f468"
   val PASSWORD="C2tVM4khusCvLSBbSK1Cg4eMUhIo1z"
