@@ -1,94 +1,78 @@
-from flask import Flask, request, render_template_string
+from flask import Flask, request, render_template
+import pygame
+import requests
+import random
 
-app = Flask(__name__)
+app_tickets = Flask(__name__)
 
-# List to store ticket details as dictionaries
+# Initialize pygame mixer
+pygame.mixer.init()
+
+# Define pairs for good and bad events
+good_pairs = [
+    ("/home/pi/tickets_urgentes/sounds/good_sound1.mp3", "success_image1.png"),
+    ("/home/pi/tickets_urgentes/sounds/good_sound2.mp3", "success_image2.png")
+]
+
+bad_pairs = [
+    ("/home/pi/tickets_urgentes/sounds/bad_sound1.mp3", "alert_image1.png"),
+    # Add more bad sound-image pairs here if needed
+]
+
 ticket_list = []
+previous_state_code = 0
 
-@app.route('/alert', methods=['POST'])
-def alert():
-    data = request.get_json()
-    urgency = data.get('urgency')
-    
-    # Get the new ticket information
-    ticket_info = {
-        "ticket_id": data.get('ticket_id'),
-        "subject": data.get('subject'),
-        "contact_email": data.get('contact_email'),
-        "contact_name": data.get('contact_name')
-    }
-    
-    # Add the ticket info to the list
-    ticket_list.append(ticket_info)
-    
-    if urgency == "4":
-        # Trigger alert (for example, send notification to TV)
-        return {"status": "Alert triggered"}, 200
+def play_and_display_pair(is_good):
+    if is_good:
+        sound, image = random.choice(good_pairs)
     else:
-        return {"status": "No alert triggered"}, 200
+        sound, image = random.choice(bad_pairs)
+    
+    # Play the corresponding sound
+    pygame.mixer.music.load(sound)
+    pygame.mixer.music.play()
 
-@app.route('/tickets', methods=['GET'])
+    # Return the corresponding image
+    return image
+
+@app_tickets.route('/get_tickets', methods=['GET'])
 def get_tickets():
-    # Render a simple HTML page to display the ticket list
-    return render_template_string('''
-    <!doctype html>
-    <html lang="en">
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Ticket List</title>
-        <style>
-            body { font-family: Arial, sans-serif; }
-            h1 { text-align: center; }
-            ul { list-style-type: none; padding: 0; }
-            li { padding: 8px; border-bottom: 1px solid #ccc; }
-        </style>
-        <script>
-            function fetchTickets() {
-                fetch('/tickets/data')
-                    .then(response => response.json())
-                    .then(data => {
-                        const ticketList = document.getElementById('ticket-list');
-                        ticketList.innerHTML = ''; // Clear existing list
-                        data.tickets.forEach(ticket => {
-                            const li = document.createElement('li');
-                            li.innerHTML = `
-                                <strong>Ticket ID:</strong> ${ticket.ticket_id}<br>
-                                <strong>Subject:</strong> ${ticket.subject}<br>
-                                <strong>Contact Name:</strong> ${ticket.contact_name}<br>
-                                <strong>Contact Email:</strong> ${ticket.contact_email}
-                            `;
-                            ticketList.appendChild(li);
-                        });
-                    })
-                    .catch(error => console.error('Error fetching tickets:', error));
-            }
+    global previous_state_code
+    show_image = ""
 
-            // Poll for new tickets every 5 seconds
-            setInterval(fetchTickets, 5000);
-            // Initial fetch to populate the list immediately
-            window.onload = fetchTickets;
-        </script>
-      </head>
-      <body>
-        <h1>Ticket List</h1>
-        <ul id="ticket-list">
-          {% for ticket in tickets %}
-            <li>
-                <strong>Ticket ID:</strong> {{ ticket.ticket_id }}<br>
-                <strong>Subject:</strong> {{ ticket.subject }}<br>
-                <strong>Contact Name:</strong> {{ ticket.contact_name }}<br>
-                <strong>Contact Email:</strong> {{ ticket.contact_email }}
-            </li>
-          {% endfor %}
-        </ul>
-      </body>
-    </html>
-    ''', tickets=ticket_list)
+    # Obtain tickets data
+    response = requests.get("https://flows.alfredsmartdata.com/webhook/tickets-urgentes", headers={"Content-Type": "application/json"})
+    
+    # Got tickets (200 OK)
+    if response.status_code == 200:
+        ticket_data = response.json()  # Process data as JSON
+        prev_ticket_length = len(ticket_list)
+        ticket_list.clear()  # Clear the ticket list
+        ticket_list.extend(ticket_data)  # Add all tickets
+        ticket_list.reverse()  # Last in, first out
+        ticket_length = len(ticket_list)
+        ticket_diff = ticket_length - prev_ticket_length
+        
+        # Check for new or closed tickets
+        if ticket_diff >= 1:
+            show_image = play_and_display_pair(is_good=False)  # Bad pair for new tickets
+        elif ticket_diff < 0:
+            show_image = play_and_display_pair(is_good=True)  # Good pair for closed tickets
+        else:
+            show_image = ""  # No image to display
 
-@app.route('/tickets/data', methods=['GET'])
-def get_tickets_data():
-    return {'tickets': ticket_list}, 200
+        previous_state_code = 200
+    elif response.status_code == 204:
+        ticket_list.clear()
+        
+        if previous_state_code == 200:
+            show_image = play_and_display_pair(is_good=True)  # Good pair for no tickets
+        else:
+            show_image = ""  # No image to display
+
+        previous_state_code = 204
+
+    return render_template("base.html", lista_tickets=ticket_list, show_image=show_image, status_code=response.status_code)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app_tickets.run(host='0.0.0.0', port=5200)

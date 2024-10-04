@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tickets</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .ticket {
+            background: white;
+            padding: 15px 15px 15px 65px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .ticket h1 {
+            font-size: 64px;
+            margin: 0 0 10px;
+        }
+
+        .ticket p {
+            margin: 5px 0;
+            font-size: 48px;
+        }
+
+        .ticket .tags {
+            font-size: 40px;
+            color: #555;
+        }
+
+        .ticket .color-band {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50px;
+            height: 100%;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+
+        .ticket.mantenimiento .color-band {
+            background-color: #2aa3fa;
+        }
+
+        .ticket.default .color-band {
+            background-color: #fc3f35;
+        }
+
+        .image-container {
+            position: absolute;
+            top: 25%;
+            left: 25%;
+            display: none;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .image-container img {
+            max-width: 600px;  /* Increased the size of the image */
+            height: auto;      /* Maintain the aspect ratio */
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .image-container img.visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tickets</h1>
+    <div class="image-container" id="image-container">
+        {% if show_image != "" %}
+            <img id="random-image" src="{{ url_for('static', filename=show_image) }}" alt="Random Image" class="visible">
+        {% endif %}
+    </div>
+
+    <div id="ticket-list"></div>
+    <h1 id="no-tickets" style="display: none;">No tickets available.</h1>
+
+    <script>
+        window.onload = function() {
+            let tickets = {{ lista_tickets|tojson }}; // Pass the tickets array from Flask
+            let showImage = "{{ show_image }}";
+            let statusCode = {{ status_code }};  // Pass the status code from Flask
+            let ticketList = document.getElementById('ticket-list');
+            let noTickets = document.getElementById('no-tickets');
+            let imageContainer = document.getElementById('image-container');
+            let randomImage = document.getElementById('random-image');
+
+            console.log("Page Loaded");
+            console.log("Show Image Value: ", showImage);
+            console.log("Status Code: ", statusCode);
+            
+            // Check if we have tickets or not
+            if (statusCode === 200 && tickets.length > 0) {
+                tickets.forEach(ticket => {
+                    let isMantenimiento = ticket.tags.includes('Mantenimiento');
+                
+                    let ticketDiv = document.createElement('div');
+                    ticketDiv.className = 'ticket ' + (isMantenimiento ? 'mantenimiento' : 'default');
+                    ticketDiv.innerHTML = `
+                        <div class="color-band"></div>
+                        <h1>Ticket ID: ${ticket.ticket_id} - ${ticket.subject}</h1>
+                        <p><strong>Name:</strong> ${ticket.name}</p>
+                        <p><strong>Email:</strong> ${ticket.mail}</p>
+                        <p class="tags"><strong>Tags:</strong> ${ticket.tags}</p>
+                    `;
+                    ticketList.appendChild(ticketDiv);
+                });
+                noTickets.style.display = 'none';
+            } else if (statusCode === 204) {
+                noTickets.style.display = 'block';  // Show "No tickets available" message
+            }
+
+            // Show the image if a valid image was provided
+            if (showImage !== "") {
+                randomImage.src = `/static/${showImage}`;  // Assign the correct image
+                imageContainer.style.display = 'flex';     // Ensure the container is displayed
+                randomImage.classList.add('visible');      // Add fade-in effect
+
+                setTimeout(function() {
+                    randomImage.classList.remove('visible');  // Fade out after 4 seconds
+                    setTimeout(function() {
+                        imageContainer.style.display = 'none';  // Hide container
+                    }, 1000);  // Wait for fade-out to complete
+                }, 4000);  // Show for 4 seconds before fading out
+            } else {
+                imageContainer.style.display = 'none';  // Hide the container if no image is provided
+            }
+        };
+    </script>
+</body>
+</html>
