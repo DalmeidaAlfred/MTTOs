@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Function to remove duplicate dummies from dummies.ini
+remove_duplicates() {
+    # Use awk to filter duplicates
+    awk '!seen[$0]++' /home/openhabian/.alfredassistant/dummies.ini > /home/openhabian/.alfredassistant/dummies.tmp && mv /home/openhabian/.alfredassistant/dummies.tmp /home/openhabian/.alfredassistant/dummies.ini
+}
+
 case $1 in
   "A")
     DUMMY="DUMMY131"
@@ -28,17 +34,22 @@ echo $DUMMY
 # Define the new dummy items to append
 NEW_ITEMS="or \n  Item ALFRED_"$DUMMY"_DUMMY_SWITCH_Switch received command ON"
 echo $NEW_ITEMS
+
+# Append the new dummy item to dummies.ini
 echo "
-["$DUMMY"]
+[$DUMMY]
 default_name=Escalera "$1"
 default_room=Comunidad
 default_usage=CommunityDoor
 device_type=DUMMY_SWITCH
 " >> /home/openhabian/.alfredassistant/dummies.ini
+
+# Remove duplicate entries from dummies.ini
+remove_duplicates
+
 cat /etc/openhab2/rules/community_Franca.rules
 cat /home/openhabian/.alfredassistant/dummies.ini
 echo DONE
-fi
 
 # Paths
 RULES_FILE="/etc/openhab2/rules/community.rules"
