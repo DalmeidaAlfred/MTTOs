@@ -44,8 +44,6 @@ echo $NEW_ITEMS
 DUMMIES_FILE="/home/openhabian/.alfredassistant/dummies.ini"
 
 # Function to ensure each dummy has the required parameters
-# Function to ensure each dummy has the required parameters
-# Function to ensure each dummy has the required parameters
 add_missing_parameters() {
     local current_dummy=""
     local dummy_found=false
@@ -93,8 +91,6 @@ add_missing_parameters() {
     # Replace the original file with the modified temp file
     mv "$temp_file" "$DUMMIES_FILE"
 }
-
-
 
 # Run the function to add missing parameters for existing dummies
 add_missing_parameters
