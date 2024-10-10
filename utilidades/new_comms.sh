@@ -80,7 +80,6 @@ OLD_RULES_FILE="/etc/openhab2/rules/community_Franca.rules"
 OLD_RANDOM_FILE="/etc/openhab2/rules/community_125.rules"
 
 # Backup the old Franca rules if it exists
-if [ -f "$OLD_RULES_FILE" ]; then
     cp "$OLD_RULES_FILE" "/etc/openhab2/rules/community_Franca.backup"
     echo "Backup of community_Franca.rules created at /etc/openhab2/rules/community_Franca.backup"
 
@@ -91,11 +90,6 @@ if [ -f "$OLD_RULES_FILE" ]; then
     # Remove the original Franca rules after backup
     rm "$OLD_RULES_FILE"
     echo "Deleted $OLD_RULES_FILE after backup."
-else
-    echo "No community_Franca.rules file found, no backup or deletion."
-    USER=""
-    PASSWORD=""
-fi
 
 # Remove the random community_125.rules if it exists
 if [ -f "$OLD_RANDOM_FILE" ]; then
