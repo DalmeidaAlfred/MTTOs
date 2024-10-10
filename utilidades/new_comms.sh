@@ -85,8 +85,8 @@ if [ -f "$OLD_RULES_FILE" ]; then
     echo "Backup of community_Franca.rules created at /etc/openhab2/rules/community_Franca.backup"
 
     # Extract USER and PASSWORD from community_Franca.rules before deletion
-    USER=$(grep -oP 'val USER="\K[^"]+' "$OLD_RULES_FILE")
-    PASSWORD=$(grep -oP 'val PASSWORD="\K[^"]+' "$OLD_RULES_FILE")
+    USER=$(grep -oP 'val USER="\K[^"]+' "/etc/openhab2/rules/community_Franca.backup")
+    PASSWORD=$(grep -oP 'val PASSWORD="\K[^"]+' "/etc/openhab2/rules/community_Franca.backup")
 
     # Remove the original Franca rules after backup
     rm "$OLD_RULES_FILE"
