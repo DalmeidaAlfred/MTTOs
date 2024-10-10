@@ -44,32 +44,43 @@ echo $NEW_ITEMS
 DUMMIES_FILE="/home/openhabian/.alfredassistant/dummies.ini"
 
 # Function to ensure each dummy has the required parameters
+# Function to ensure each dummy has the required parameters
 add_missing_parameters() {
+    local current_dummy=""
+    local dummy_found=false
+    local temp_file=$(mktemp)
+
     while IFS= read -r line; do
         if [[ $line =~ \[(DUMMY[0-9]{3})\] ]]; then
-            DUMMY_NAME="${BASH_REMATCH[1]}"
-            echo "Checking parameters for $DUMMY_NAME..."
-
-            # Check for default_room
-            if ! grep -q "default_room=" "$DUMMIES_FILE"; then
-                echo "default_room=Comunidad" >> "$DUMMIES_FILE"
-                echo "Added default_room for $DUMMY_NAME."
+            if [ "$dummy_found" = true ] && [ "$current_dummy" != "" ]; then
+                # Write the current dummy to temp file before processing the next one
+                echo "$line" >> "$temp_file"
+                echo "default_room=Comunidad" >> "$temp_file"
+                echo "default_usage=CommunityDoor" >> "$temp_file"
+                echo "device_type=DUMMY_SWITCH" >> "$temp_file"
+                dummy_found=false  # Reset for the next dummy
             fi
-
-            # Check for default_usage
-            if ! grep -q "default_usage=" "$DUMMIES_FILE"; then
-                echo "default_usage=CommunityDoor" >> "$DUMMIES_FILE"
-                echo "Added default_usage for $DUMMY_NAME."
-            fi
-
-            # Check for device_type
-            if ! grep -q "device_type=" "$DUMMIES_FILE"; then
-                echo "device_type=DUMMY_SWITCH" >> "$DUMMIES_FILE"
-                echo "Added device_type for $DUMMY_NAME."
+            current_dummy="${BASH_REMATCH[1]}"
+            echo "$line" >> "$temp_file"
+            dummy_found=true
+        else
+            if [ "$dummy_found" = true ]; then
+                echo "$line" >> "$temp_file"
             fi
         fi
     done < "$DUMMIES_FILE"
+
+    # If we reach the end of the file, check the last dummy
+    if [ "$dummy_found" = true ] && [ "$current_dummy" != "" ]; then
+        echo "default_room=Comunidad" >> "$temp_file"
+        echo "default_usage=CommunityDoor" >> "$temp_file"
+        echo "device_type=DUMMY_SWITCH" >> "$temp_file"
+    fi
+
+    # Replace the original file with the modified temp file
+    mv "$temp_file" "$DUMMIES_FILE"
 }
+
 
 # Run the function to add missing parameters for existing dummies
 add_missing_parameters
@@ -80,16 +91,29 @@ OLD_RULES_FILE="/etc/openhab2/rules/community_Franca.rules"
 OLD_RANDOM_FILE="/etc/openhab2/rules/community_125.rules"
 
 # Backup the old Franca rules if it exists
+if [ -f "$OLD_RULES_FILE" ]; then
     cp "$OLD_RULES_FILE" "/etc/openhab2/rules/community_Franca.backup"
     echo "Backup of community_Franca.rules created at /etc/openhab2/rules/community_Franca.backup"
 
     # Extract USER and PASSWORD from community_Franca.rules before deletion
-    USER=$(grep -oP 'val USER="\K[^"]+' "/etc/openhab2/rules/community_Franca.backup")
-    PASSWORD=$(grep -oP 'val PASSWORD="\K[^"]+' "/etc/openhab2/rules/community_Franca.backup")
+    USER=$(grep -oP 'val USER="\K[^"]+' "$OLD_RULES_FILE")
+    PASSWORD=$(grep -oP 'val PASSWORD="\K[^"]+' "$OLD_RULES_FILE")
 
     # Remove the original Franca rules after backup
     rm "$OLD_RULES_FILE"
     echo "Deleted $OLD_RULES_FILE after backup."
+else
+    echo "$OLD_RULES_FILE does not exist. Extracting USER and PASSWORD from backup."
+    
+    # Check if the backup file exists
+    if [ -f "/etc/openhab2/rules/community_Franca.backup" ]; then
+        USER=$(grep -oP 'val USER="\K[^"]+' "/etc/openhab2/rules/community_Franca.backup")
+        PASSWORD=$(grep -oP 'val PASSWORD="\K[^"]+' "/etc/openhab2/rules/community_Franca.backup")
+    else
+        echo "Backup file not found. Exiting."
+        exit 1
+    fi
+fi
 
 # Remove the random community_125.rules if it exists
 if [ -f "$OLD_RANDOM_FILE" ]; then
