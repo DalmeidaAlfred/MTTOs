@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# Function to remove duplicate dummies from dummies.ini
-remove_duplicates() {
-    # Use awk to filter duplicates
-    awk '!seen[$0]++' /home/openhabian/.alfredassistant/dummies.ini > /home/openhabian/.alfredassistant/dummies.tmp && mv /home/openhabian/.alfredassistant/dummies.tmp /home/openhabian/.alfredassistant/dummies.ini
-}
-
 case $1 in
   "A")
     DUMMY="DUMMY131"
@@ -31,27 +25,56 @@ case $1 in
 esac
 
 echo $DUMMY
+
 # Define the new dummy items to append
 NEW_ITEMS="or \n  Item ALFRED_"$DUMMY"_DUMMY_SWITCH_Switch received command ON"
 echo $NEW_ITEMS
 
-# Append the new dummy item to dummies.ini
-echo "
-[$DUMMY]
-default_name=Escalera "$1"
-default_room=Comunidad
-default_usage=CommunityDoor
-device_type=DUMMY_SWITCH
-" >> /home/openhabian/.alfredassistant/dummies.ini
+# Add the dummy section to the ini file
+{
+    echo "[$DUMMY]"
+    echo "default_name=Escalera "$1""
+    echo "default_room=Comunidad"
+    echo "default_usage=CommunityDoor"
+    echo "device_type=DUMMY_SWITCH"
+    echo ""
+} >> /home/openhabian/.alfredassistant/dummies.ini
 
-# Remove duplicate entries from dummies.ini
-remove_duplicates
+# Check existing parameters for dummies in dummies.ini
+DUMMIES_FILE="/home/openhabian/.alfredassistant/dummies.ini"
 
-cat /etc/openhab2/rules/community_Franca.rules
-cat /home/openhabian/.alfredassistant/dummies.ini
-echo DONE
+# Function to ensure each dummy has the required parameters
+add_missing_parameters() {
+    while IFS= read -r line; do
+        if [[ $line =~ \[(DUMMY[0-9]{3})\] ]]; then
+            DUMMY_NAME="${BASH_REMATCH[1]}"
+            echo "Checking parameters for $DUMMY_NAME..."
 
-# Paths
+            # Check for default_room
+            if ! grep -q "default_room=" "$DUMMIES_FILE"; then
+                echo "default_room=Comunidad" >> "$DUMMIES_FILE"
+                echo "Added default_room for $DUMMY_NAME."
+            fi
+
+            # Check for default_usage
+            if ! grep -q "default_usage=" "$DUMMIES_FILE"; then
+                echo "default_usage=CommunityDoor" >> "$DUMMIES_FILE"
+                echo "Added default_usage for $DUMMY_NAME."
+            fi
+
+            # Check for device_type
+            if ! grep -q "device_type=" "$DUMMIES_FILE"; then
+                echo "device_type=DUMMY_SWITCH" >> "$DUMMIES_FILE"
+                echo "Added device_type for $DUMMY_NAME."
+            fi
+        fi
+    done < "$DUMMIES_FILE"
+}
+
+# Run the function to add missing parameters for existing dummies
+add_missing_parameters
+
+# Backup and manage old rules
 RULES_FILE="/etc/openhab2/rules/community.rules"
 OLD_RULES_FILE="/etc/openhab2/rules/community_Franca.rules"
 OLD_RANDOM_FILE="/etc/openhab2/rules/community_125.rules"
