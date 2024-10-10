@@ -45,6 +45,7 @@ DUMMIES_FILE="/home/openhabian/.alfredassistant/dummies.ini"
 
 # Function to ensure each dummy has the required parameters
 # Function to ensure each dummy has the required parameters
+# Function to ensure each dummy has the required parameters
 add_missing_parameters() {
     local current_dummy=""
     local dummy_found=false
@@ -52,18 +53,24 @@ add_missing_parameters() {
 
     while IFS= read -r line; do
         if [[ $line =~ \[(DUMMY[0-9]{3})\] ]]; then
-            if [ "$dummy_found" = true ] && [ "$current_dummy" != "" ]; then
-                # Write the current dummy to temp file before processing the next one
-                echo "$line" >> "$temp_file"
-                echo "default_room=Comunidad" >> "$temp_file"
-                echo "default_usage=CommunityDoor" >> "$temp_file"
-                echo "device_type=DUMMY_SWITCH" >> "$temp_file"
+            if [ "$dummy_found" = true ]; then
+                # Check if parameters exist before adding them
+                if ! grep -q "^default_room=" "$temp_file"; then
+                    echo "default_room=Comunidad" >> "$temp_file"
+                fi
+                if ! grep -q "^default_usage=" "$temp_file"; then
+                    echo "default_usage=CommunityDoor" >> "$temp_file"
+                fi
+                if ! grep -q "^device_type=" "$temp_file"; then
+                    echo "device_type=DUMMY_SWITCH" >> "$temp_file"
+                fi
                 dummy_found=false  # Reset for the next dummy
             fi
             current_dummy="${BASH_REMATCH[1]}"
             echo "$line" >> "$temp_file"
             dummy_found=true
         else
+            # Write the line to the temp file only if we're inside a dummy section
             if [ "$dummy_found" = true ]; then
                 echo "$line" >> "$temp_file"
             fi
@@ -71,15 +78,22 @@ add_missing_parameters() {
     done < "$DUMMIES_FILE"
 
     # If we reach the end of the file, check the last dummy
-    if [ "$dummy_found" = true ] && [ "$current_dummy" != "" ]; then
-        echo "default_room=Comunidad" >> "$temp_file"
-        echo "default_usage=CommunityDoor" >> "$temp_file"
-        echo "device_type=DUMMY_SWITCH" >> "$temp_file"
+    if [ "$dummy_found" = true ]; then
+        if ! grep -q "^default_room=" "$temp_file"; then
+            echo "default_room=Comunidad" >> "$temp_file"
+        fi
+        if ! grep -q "^default_usage=" "$temp_file"; then
+            echo "default_usage=CommunityDoor" >> "$temp_file"
+        fi
+        if ! grep -q "^device_type=" "$temp_file"; then
+            echo "device_type=DUMMY_SWITCH" >> "$temp_file"
+        fi
     fi
 
     # Replace the original file with the modified temp file
     mv "$temp_file" "$DUMMIES_FILE"
 }
+
 
 
 # Run the function to add missing parameters for existing dummies
