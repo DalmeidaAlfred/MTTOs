@@ -1,0 +1,1 @@
+0 9 * * * root /bin/bash /home/pi/MTTO/NyN_pantallas_tv.sh
