@@ -1,1 +1,1 @@
-0 9 * * * root /bin/bash /home/pi/MTTO/NyN_pantallas_tv.sh
+0 9 * * * root /bin/bash /etc/openhab2/scripts/check_things_status.sh
